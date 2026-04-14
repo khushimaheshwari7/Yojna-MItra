@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yojana Mitra — Government Scheme Eligibility Finder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ───────────────────────────────── Reset & Root */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ink:     #18180e;
+  --ink2:    #46463a;
+  --ink3:    #888878;
+  --paper:   #faf8f1;
+  --paper2:  #f2efe4;
+  --paper3:  #e8e3d0;
+  --white:   #ffffff;
+  --saffron: #c84b0a;
+  --saffron-light: #fdf0e8;
+  --green:   #1a6b3c;
+  --green-light: #e8f5ee;
+  --amber:   #9a5c00;
+  --amber-light: #fef3e2;
+  --border:  rgba(24,24,14,0.1);
+  --border2: rgba(24,24,14,0.18);
+  --shadow:  0 2px 16px rgba(24,24,14,0.08);
+  --shadow-lg: 0 8px 40px rgba(24,24,14,0.14);
+  --radius: 10px;
+  --radius-lg: 14px;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+a { color: var(--saffron); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ───────────────────────────────── Layout */
+.container { max-width: 960px; margin: 0 auto; padding: 0 1.5rem; }
+
+/* ───────────────────────────────── Header */
+header {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.5rem;
+  max-width: 960px;
+  margin: 0 auto;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo-mark {
+  width: 34px;
+  height: 34px;
+  background: var(--saffron);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+.logo-text { font-family: 'Libre Baskerville', serif; font-size: 1.05rem; font-weight: 700; }
+.logo-text span { color: #f59e4a; }
+.header-nav { display: flex; gap: 0.5rem; }
+.nav-btn {
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: transparent;
+  color: rgba(255,255,255,0.8);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.nav-btn:hover, .nav-btn.active { background: var(--saffron); border-color: var(--saffron); color: #fff; }
+
+/* ───────────────────────────────── Pages */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ───────────────────────────────── Hero */
+.hero {
+  background: linear-gradient(135deg, #18180e 60%, #2a1e08 100%);
+  color: var(--paper);
+  padding: 3.5rem 1.5rem 3rem;
+  text-align: center;
+}
+.hero-emblem { font-size: 2.2rem; margin-bottom: 1rem; opacity: 0.75; }
+.hero h1 {
+  font-family: 'Libre Baskerville', serif;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+}
+.hero h1 span { color: #f59e4a; }
+.hero p { color: rgba(255,255,255,0.65); font-size: 0.95rem; max-width: 500px; margin: 0 auto; font-weight: 300; }
+
+/* ───────────────────────────────── Form */
+.form-wrap { padding: 2rem 0 3rem; }
+.section-title {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.step-badge {
+  width: 26px; height: 26px;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 50%;
+  font-size: 0.72rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  flex-shrink: 0;
+}
+
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  margin-bottom: 1.25rem;
+  box-shadow: var(--shadow);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.1rem;
+}
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group.full { grid-column: 1 / -1; }
+
+label.field-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+
+input[type=number], input[type=text], select {
+  padding: 0.6rem 0.85rem;
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.9rem;
+  color: var(--ink);
+  background: var(--paper);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+}
+input:focus, select:focus {
+  border-color: var(--saffron);
+  box-shadow: 0 0 0 3px rgba(200,75,10,0.1);
+  background: #fff;
+}
+select option { background: #fff; }
+
+/* Checkbox grid */
+.checks-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 10px;
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 0.84rem;
+  background: var(--paper);
+  transition: all 0.15s;
+  user-select: none;
+}
+.check-item:hover { background: var(--paper2); }
+.check-item.checked { background: var(--saffron-light); border-color: var(--saffron); color: var(--saffron); }
+.check-item input[type=checkbox] { display: none; }
+.check-box {
+  width: 16px; height: 16px;
+  border: 1.5px solid var(--border2);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.65rem;
+  transition: all 0.15s;
+}
+.check-item.checked .check-box { background: var(--saffron); border-color: var(--saffron); color: #fff; }
+
+/* CTA Button */
+.btn-primary {
+  width: 100%;
+  padding: 0.9rem 1.5rem;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  border-radius: var(--radius);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 1.5rem;
+}
+.btn-primary:hover { background: var(--saffron); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(200,75,10,0.3); }
+.btn-primary:active { transform: translateY(0); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.btn-secondary {
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border2);
+  background: #fff;
+  color: var(--ink2);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-secondary:hover { background: var(--paper2); }
+
+/* Error */
+.error-msg {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  color: #991b1b;
+  font-size: 0.85rem;
+  margin-top: 1rem;
+  display: none;
+}
+
+/* ───────────────────────────────── Loading */
+.loading-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(250,248,241,0.9);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1rem;
+}
+.loading-overlay.show { display: flex; }
+.spinner {
+  width: 40px; height: 40px;
+  border: 3px solid var(--border2);
+  border-top-color: var(--saffron);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 0.9rem; color: var(--ink2); }
+
+/* ───────────────────────────────── Results */
+.results-bar {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 1.5rem 0;
+  margin-bottom: 2rem;
+}
+.results-bar-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.results-headline { font-family: 'Libre Baskerville', serif; font-size: 1.1rem; }
+.summary-pills { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.pill {
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1.5px solid transparent;
+}
+.pill-eligible { background: var(--green-light); color: var(--green); }
+.pill-almost   { background: var(--amber-light); color: var(--amber); }
+.pill-not      { background: #fde8e0; color: #7c2d12; }
+.pill:hover    { filter: brightness(0.94); }
+.pill.active   { border-color: currentColor; }
+
+.filter-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.filter-label { font-size: 0.78rem; color: var(--ink3); font-weight: 500; }
+.cat-filters { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.cat-btn {
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border2);
+  background: #fff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.75rem;
+  cursor: pointer;
+  color: var(--ink2);
+  transition: all 0.15s;
+}
+.cat-btn:hover, .cat-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+.scheme-count {
+  font-size: 0.82rem;
+  color: var(--ink3);
+  margin-bottom: 1rem;
+}
+
+/* ───────────────────────────────── Scheme Cards */
+.scheme-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  margin-bottom: 1rem;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.2s, transform 0.2s;
+  animation: cardIn 0.25s ease both;
+}
+.scheme-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+@keyframes cardIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.status-stripe { height: 4px; }
+.stripe-eligible { background: var(--green); }
+.stripe-almost   { background: #d97706; }
+.stripe-not      { background: var(--saffron); }
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem 0.75rem;
+}
+.scheme-icon-wrap {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.cat-students   { background: #eef2ff; }
+.cat-women      { background: #fdf2f8; }
+.cat-farmers    { background: #f0fdf4; }
+.cat-health     { background: #fff7ed; }
+.cat-employment { background: #eff6ff; }
+.cat-housing    { background: #fdf4ff; }
+
+.scheme-meta { flex: 1; min-width: 0; }
+.scheme-name {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.3;
+}
+.scheme-fullname {
+  font-size: 0.78rem;
+  color: var(--ink3);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.73rem;
+  font-weight: 600;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.badge-eligible { background: var(--green-light); color: var(--green); }
+.badge-almost   { background: var(--amber-light); color: var(--amber); }
+.badge-not      { background: #fde8e0; color: #7c2d12; }
+
+.card-body { padding: 0 1.5rem 1rem; }
+.scheme-desc { font-size: 0.85rem; color: var(--ink2); line-height: 1.65; margin-bottom: 0.9rem; }
+
+.benefit-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--green-light);
+  color: var(--green);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.criteria-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.criteria-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 0.82rem;
+  padding: 6px 10px;
+  border-radius: 7px;
+  line-height: 1.45;
+}
+.crit-met      { background: var(--green-light); color: var(--green); }
+.crit-unmet    { background: #fde8e0; color: #7c2d12; }
+.crit-optional { background: var(--amber-light); color: var(--amber); }
+.crit-icon { flex-shrink: 0; font-size: 0.85rem; line-height: 1.45; width: 14px; text-align: center; }
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  border-top: 1px solid var(--border);
+  background: var(--paper);
+}
+.cat-tag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.btn-details {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--saffron);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  transition: gap 0.15s;
+}
+.btn-details:hover { gap: 8px; }
+
+/* ───────────────────────────────── Empty */
+.empty-state {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: var(--ink3);
+}
+.empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+.empty-state h3 { font-size: 1rem; color: var(--ink2); margin-bottom: 0.4rem; }
+.empty-state p { font-size: 0.85rem; }
+
+/* ───────────────────────────────── Detail Modal */
+.modal-bg {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(24,24,14,0.6);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  backdrop-filter: blur(2px);
+}
+.modal-bg.open { display: flex; }
+.modal-box {
+  background: var(--paper);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 88vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+}
+.modal-head {
+  padding: 1.5rem 1.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--paper);
+  z-index: 2;
+}
+.modal-close {
+  position: absolute;
+  top: 1rem; right: 1rem;
+  background: var(--paper2);
+  border: none;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink2);
+  transition: background 0.15s;
+}
+.modal-close:hover { background: var(--paper3); }
+.modal-name { font-family: 'Libre Baskerville', serif; font-size: 1.2rem; font-weight: 700; line-height: 1.3; }
+.modal-ministry { font-size: 0.78rem; color: var(--ink3); margin-top: 4px; }
+.modal-body { padding: 1.5rem 1.75rem; }
+.modal-sec { margin-bottom: 1.5rem; }
+.modal-sec-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.75rem;
+}
+.modal-desc { font-size: 0.9rem; color: var(--ink2); line-height: 1.75; }
+.modal-benefit {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  background: var(--green-light);
+  color: var(--green);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+.doc-list, .step-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+.doc-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.86rem;
+  color: var(--ink2);
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+.doc-list li:last-child { border-bottom: none; }
+.doc-icon { font-size: 0.9rem; flex-shrink: 0; margin-top: 1px; }
+.step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 0.86rem;
+  color: var(--ink2);
+  line-height: 1.55;
+}
+.step-num {
+  width: 24px; height: 24px;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 50%;
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.modal-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--saffron);
+  font-size: 0.86rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+.modal-link:hover { text-decoration: underline; }
+
+/* ───────────────────────────────── Stats Page */
+.stats-page { padding: 2.5rem 0 3rem; }
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+.stat-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  text-align: center;
+}
+.stat-number { font-family: 'Libre Baskerville', serif; font-size: 2rem; font-weight: 700; color: var(--ink); }
+.stat-label { font-size: 0.78rem; color: var(--ink3); margin-top: 4px; }
+
+.table-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.table-title { font-family: 'Libre Baskerville', serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 1rem; }
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+th { text-align: left; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink3); padding: 0 0 0.6rem; border-bottom: 1px solid var(--border); }
+td { padding: 0.65rem 0; border-bottom: 1px solid var(--border); color: var(--ink2); }
+tr:last-child td { border-bottom: none; }
+td.num { font-weight: 600; color: var(--ink); }
+.cat-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--paper2);
+  color: var(--ink2);
+  text-transform: capitalize;
+}
+
+/* ───────────────────────────────── Toast */
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  z-index: 300;
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ───────────────────────────────── Mobile */
+@media (max-width: 640px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .form-group.full { grid-column: 1; }
+  .checks-grid { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .results-bar-inner { flex-direction: column; align-items: flex-start; }
+  .card-header { flex-wrap: wrap; }
+  .header-nav { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-mark">⚖</div>
+      <span class="logo-text">Yojana <span>Mitra</span></span>
+    </div>
+    <div class="header-nav">
+      <button class="nav-btn active" onclick="showPage('home')">Check Eligibility</button>
+      <button class="nav-btn" onclick="showPage('schemes')">All Schemes</button>
+      <button class="nav-btn" onclick="showPage('stats'); loadStats()">Analytics</button>
+    </div>
+  </div>
+</header>
+
+<!-- ── Loading ── -->
+<div class="loading-overlay" id="loading">
+  <div class="spinner"></div>
+  <div class="loading-text" id="loading-text">Checking eligibility…</div>
+</div>
+
+<!-- ── Toast ── -->
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════ PAGE: HOME ══════════════ -->
+<div class="page active" id="page-home">
+
+  <div class="hero">
+    <div class="hero-emblem">🇮🇳</div>
+    <h1>Find Government Schemes<br><span>You're Eligible For</span></h1>
+    <p>Enter your details below. We'll check your eligibility across central government schemes covering health, housing, farming, education, and employment.</p>
+  </div>
+
+  <div class="container form-wrap">
+
+    <!-- Personal Details -->
+    <div class="card">
+      <div class="section-title"><span class="step-badge">1</span> Personal & Financial Details</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="field-label">Age (years) *</label>
+          <input type="number" id="f-age" placeholder="e.g. 28" min="0" max="120">
+        </div>
+        <div class="form-group">
+          <label class="field-label">Gender *</label>
+          <select id="f-gender">
+            <option value="">Select gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other / Prefer not to say</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="field-label">Annual Family Income (₹) *</label>
+          <input type="number" id="f-income" placeholder="e.g. 250000" min="0">
+        </div>
+        <div class="form-group">
+          <label class="field-label">State / UT *</label>
+          <select id="f-state">
+            <option value="">Select state</option>
+            <option>Andhra Pradesh</option><option>Arunachal Pradesh</option><option>Assam</option>
+            <option>Bihar</option><option>Chhattisgarh</option><option>Goa</option>
+            <option>Gujarat</option><option>Haryana</option><option>Himachal Pradesh</option>
+            <option>Jharkhand</option><option>Karnataka</option><option>Kerala</option>
+            <option>Madhya Pradesh</option><option>Maharashtra</option><option>Manipur</option>
+            <option>Meghalaya</option><option>Mizoram</option><option>Nagaland</option>
+            <option>Odisha</option><option>Punjab</option><option>Rajasthan</option>
+            <option>Sikkim</option><option>Tamil Nadu</option><option>Telangana</option>
+            <option>Tripura</option><option>Uttar Pradesh</option><option>Uttarakhand</option>
+            <option>West Bengal</option><option>Delhi</option><option>Jammu & Kashmir</option>
+            <option>Ladakh</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="field-label">Caste / Category *</label>
+          <select id="f-category">
+            <option value="">Select category</option>
+            <option value="general">General</option>
+            <option value="obc">OBC</option>
+            <option value="sc">SC (Scheduled Caste)</option>
+            <option value="st">ST (Scheduled Tribe)</option>
+            <option value="ews">EWS (Economically Weaker Section)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="field-label">Occupation *</label>
+          <select id="f-occupation">
+            <option value="">Select occupation</option>
+            <option value="student">Student</option>
+            <option value="farmer">Farmer / Agricultural Worker</option>
+            <option value="self-employed">Self-employed / Business</option>
+            <option value="salaried">Salaried Employee</option>
+            <option value="unemployed">Unemployed / Job Seeker</option>
+            <option value="daily-wage">Daily Wage Worker</option>
+            <option value="homemaker">Homemaker</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="field-label">Marital Status</label>
+          <select id="f-marital">
+            <option value="">Select</option>
+            <option value="single">Single / Unmarried</option>
+            <option value="married">Married</option>
+            <option value="widow">Widow / Widower</option>
+            <option value="divorced">Divorced / Separated</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="field-label">Agricultural Land (acres)</label>
+          <input type="number" id="f-land" placeholder="0 if none" min="0" step="0.1" value="0">
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Details -->
+    <div class="card">
+      <div class="section-title"><span class="step-badge">2</span> Additional Details <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.78rem;font-weight:400;color:var(--ink3);margin-left:4px">(select all that apply)</span></div>
+      <div class="checks-grid" id="extras-grid">
+        <label class="check-item" data-val="bpl">
+          <input type="checkbox" value="bpl">
+          <span class="check-box">✓</span>
+          BPL Card Holder
+        </label>
+        <label class="check-item" data-val="disabled">
+          <input type="checkbox" value="disabled">
+          <span class="check-box">✓</span>
+          Person with Disability
+        </label>
+        <label class="check-item" data-val="no-house">
+          <input type="checkbox" value="no-house">
+          <span class="check-box">✓</span>
+          No Pucca House
+        </label>
+        <label class="check-item" data-val="ration-card">
+          <input type="checkbox" value="ration-card">
+          <span class="check-box">✓</span>
+          Ration Card Holder
+        </label>
+        <label class="check-item" data-val="bank-account">
+          <input type="checkbox" value="bank-account">
+          <span class="check-box">✓</span>
+          Has Bank Account
+        </label>
+        <label class="check-item" data-val="class-10">
+          <input type="checkbox" value="class-10">
+          <span class="check-box">✓</span>
+          Passed Class 10
+        </label>
+        <label class="check-item" data-val="class-12">
+          <input type="checkbox" value="class-12">
+          <span class="check-box">✓</span>
+          Passed Class 12
+        </label>
+        <label class="check-item" data-val="graduate">
+          <input type="checkbox" value="graduate">
+          <span class="check-box">✓</span>
+          Graduate or Higher
+        </label>
+      </div>
+      <div class="error-msg" id="form-error"></div>
+      <button class="btn-primary" id="btn-check" onclick="submitCheck()">
+        <span>Check My Eligibility</span>
+        <span>→</span>
+      </button>
+    </div>
+
+    <!-- Results section (injected here) -->
+    <div id="results-section" style="display:none">
+      <div class="results-bar" style="margin: 0 -1.5rem; padding: 1.25rem 1.5rem;">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+          <div class="results-headline" id="res-headline">Checking…</div>
+          <div class="summary-pills" id="summary-pills"></div>
+        </div>
+      </div>
+
+      <div class="filter-row" style="margin-top:1.25rem;">
+        <div class="filter-label">Filter by category:</div>
+        <div class="cat-filters" id="cat-filters">
+          <button class="cat-btn active" onclick="filterCat('all',this)">All</button>
+          <button class="cat-btn" onclick="filterCat('farmers',this)">Farmers</button>
+          <button class="cat-btn" onclick="filterCat('health',this)">Health</button>
+          <button class="cat-btn" onclick="filterCat('housing',this)">Housing</button>
+          <button class="cat-btn" onclick="filterCat('students',this)">Students</button>
+          <button class="cat-btn" onclick="filterCat('women',this)">Women</button>
+          <button class="cat-btn" onclick="filterCat('employment',this)">Employment</button>
+        </div>
+      </div>
+      <div class="scheme-count" id="scheme-count"></div>
+      <div id="results-list"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ PAGE: ALL SCHEMES ══════════════ -->
+<div class="page" id="page-schemes">
+  <div class="hero" style="padding:2rem 1.5rem 1.75rem">
+    <h1 style="font-size:1.8rem">All Government Schemes</h1>
+    <p>Browse all 13 schemes in our database. Click any scheme to see full details.</p>
+  </div>
+  <div class="container" style="padding-top:2rem;padding-bottom:3rem">
+    <div class="filter-row">
+      <div class="filter-label">Filter by category:</div>
+      <div class="cat-filters">
+        <button class="cat-btn active" onclick="loadAllSchemes('all',this)">All</button>
+        <button class="cat-btn" onclick="loadAllSchemes('farmers',this)">Farmers</button>
+        <button class="cat-btn" onclick="loadAllSchemes('health',this)">Health</button>
+        <button class="cat-btn" onclick="loadAllSchemes('housing',this)">Housing</button>
+        <button class="cat-btn" onclick="loadAllSchemes('students',this)">Students</button>
+        <button class="cat-btn" onclick="loadAllSchemes('women',this)">Women</button>
+        <button class="cat-btn" onclick="loadAllSchemes('employment',this)">Employment</button>
+      </div>
+    </div>
+    <div id="all-schemes-list"></div>
+  </div>
+</div>
+
+<!-- ══════════════ PAGE: STATS ══════════════ -->
+<div class="page" id="page-stats">
+  <div class="hero" style="padding:2rem 1.5rem 1.75rem">
+    <h1 style="font-size:1.8rem">Usage Analytics</h1>
+    <p>Aggregated, anonymized eligibility check statistics.</p>
+  </div>
+  <div class="container stats-page">
+    <div class="stats-grid" id="stats-summary">
+      <div class="stat-card"><div class="stat-number" id="st-checks">—</div><div class="stat-label">Eligibility Checks Run</div></div>
+      <div class="stat-card"><div class="stat-number" id="st-schemes">13</div><div class="stat-label">Schemes in Database</div></div>
+      <div class="stat-card"><div class="stat-number" id="st-categories">6</div><div class="stat-label">Categories Covered</div></div>
+    </div>
+    <div class="table-card">
+      <div class="table-title">Most Eligible Schemes</div>
+      <table id="tbl-eligible">
+        <thead><tr><th>Scheme</th><th>Category</th><th>Times Eligible</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="table-card">
+      <div class="table-title">Most Checked Schemes</div>
+      <table id="tbl-searched">
+        <thead><tr><th>Scheme</th><th>Times Checked</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ DETAIL MODAL ══════════════ -->
+<div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
+  <div class="modal-box" id="modal-box">
+    <div class="modal-head">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-name" id="modal-name"></div>
+      <div class="modal-ministry" id="modal-ministry"></div>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// Auto-detect: if opened as a file, point to Flask; if served by Flask, use same origin
+const API = window.location.protocol === 'file:' ? 'http://localhost:5000' : '';
+
+/* ─── Page navigation ──────────────────────────── */
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const map = { home: 0, schemes: 1, stats: 2 };
+  document.querySelectorAll('.nav-btn')[map[name]].classList.add('active');
+  if (name === 'schemes') loadAllSchemes('all', document.querySelector('#page-schemes .cat-btn'));
+  window.scrollTo(0, 0);
+}
+
+/* ─── Toast ─────────────────────────────────────── */
+function toast(msg, dur = 2800) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+
+/* ─── Loading ───────────────────────────────────── */
+function setLoading(on, msg = 'Checking eligibility…') {
+  document.getElementById('loading').classList.toggle('show', on);
+  document.getElementById('loading-text').textContent = msg;
+}
+
+/* ─── Checkbox toggles ──────────────────────────── */
+document.querySelectorAll('.check-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const cb = item.querySelector('input');
+    cb.checked = !cb.checked;
+    item.classList.toggle('checked', cb.checked);
+  });
+});
+
+function getExtras() {
+  return [...document.querySelectorAll('#extras-grid input:checked')].map(c => c.value);
+}
+
+/* ─── Submit check ──────────────────────────────── */
+async function submitCheck() {
+  const errEl = document.getElementById('form-error');
+  errEl.style.display = 'none';
+
+  const payload = {
+    age:        parseInt(document.getElementById('f-age').value) || 0,
+    gender:     document.getElementById('f-gender').value,
+    income:     parseInt(document.getElementById('f-income').value) || 0,
+    state:      document.getElementById('f-state').value,
+    category:   document.getElementById('f-category').value,
+    occupation: document.getElementById('f-occupation').value,
+    marital:    document.getElementById('f-marital').value,
+    land:       parseFloat(document.getElementById('f-land').value) || 0,
+    extras:     getExtras()
+  };
+
+  const required = ['age','gender','income','state','category','occupation'];
+  const missing  = required.filter(f => !payload[f] || payload[f] === 0 && f === 'age');
+  if (payload.age === 0) { showError('Please enter your age.'); return; }
+  if (!payload.gender)     { showError('Please select your gender.'); return; }
+  if (payload.income === 0 && !confirm('Income appears to be ₹0. Continue?')) return;
+  if (!payload.state)      { showError('Please select your state.'); return; }
+  if (!payload.category)   { showError('Please select your caste/category.'); return; }
+  if (!payload.occupation) { showError('Please select your occupation.'); return; }
+
+  setLoading(true);
+  document.getElementById('btn-check').disabled = true;
+
+  try {
+    const res  = await fetch(API + '/api/check', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (!res.ok) { showError(data.error || 'Server error.'); return; }
+    renderResults(data);
+    document.getElementById('results-section').style.display = 'block';
+    setTimeout(() => document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' }), 100);
+    toast(`✓ Found ${data.summary.eligible} eligible and ${data.summary.almost} almost-eligible schemes.`);
+  } catch(e) {
+    showError('Could not reach the server. Is the Flask backend running?');
+  } finally {
+    setLoading(false);
+    document.getElementById('btn-check').disabled = false;
+  }
+}
+
+function showError(msg) {
+  setLoading(false);
+  document.getElementById('btn-check').disabled = false;
+  const el = document.getElementById('form-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+/* ─── Render results ────────────────────────────── */
+let _allResults = [];
+let _statusFilter = 'all';
+let _catFilter    = 'all';
+
+function renderResults(data) {
+  _allResults = data.results;
+  _statusFilter = 'all';
+  _catFilter    = 'all';
+  resetFilters();
+
+  const s = data.summary;
+  document.getElementById('res-headline').textContent =
+    `${s.total} schemes checked for your profile`;
+
+  document.getElementById('summary-pills').innerHTML = `
+    <span class="pill pill-eligible ${_statusFilter==='eligible'?'active':''}" onclick="filterStatus('eligible',this)">
+      ✓ ${s.eligible} Eligible
+    </span>
+    <span class="pill pill-almost ${_statusFilter==='almost'?'active':''}" onclick="filterStatus('almost',this)">
+      ◑ ${s.almost} Almost Eligible
+    </span>
+    <span class="pill pill-not ${_statusFilter==='not_eligible'?'active':''}" onclick="filterStatus('not_eligible',this)">
+      ✗ ${s.not_eligible} Not Eligible
+    </span>`;
+
+  renderFiltered();
+}
+
+function resetFilters() {
+  document.querySelectorAll('#cat-filters .cat-btn').forEach((b,i) => b.classList.toggle('active', i===0));
+}
+
+function filterStatus(status, el) {
+  _statusFilter = _statusFilter === status ? 'all' : status;
+  document.querySelectorAll('#summary-pills .pill').forEach(p => p.classList.remove('active'));
+  if (_statusFilter !== 'all') el.classList.add('active');
+  renderFiltered();
+}
+
+function filterCat(cat, el) {
+  _catFilter = cat;
+  document.querySelectorAll('#cat-filters .cat-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderFiltered();
+}
+
+function renderFiltered() {
+  let res = _allResults;
+  if (_statusFilter !== 'all') res = res.filter(r => r.status === _statusFilter);
+  if (_catFilter !== 'all')    res = res.filter(r => r.scheme.category === _catFilter);
+  document.getElementById('scheme-count').textContent =
+    `Showing ${res.length} of ${_allResults.length} schemes`;
+  document.getElementById('results-list').innerHTML =
+    res.length ? res.map(schemeCard).join('') : emptyState();
+}
+
+/* ─── Scheme card (results) ─────────────────────── */
+function schemeCard(r, showStatus = true) {
+  const s = r.scheme;
+  const statusMap = { eligible: 'Eligible ✓', almost: 'Almost Eligible', not_eligible: 'Not Eligible' };
+  const badgeMap  = { eligible: 'badge-eligible', almost: 'badge-almost', not_eligible: 'badge-not' };
+  const stripeMap = { eligible: 'stripe-eligible', almost: 'stripe-almost', not_eligible: 'stripe-not' };
+
+  const criteriaHtml = (r.criteria || []).map(c => {
+    if (c.met)      return `<li class="criteria-item crit-met"><span class="crit-icon">✓</span>${c.label}</li>`;
+    if (c.required) return `<li class="criteria-item crit-unmet"><span class="crit-icon">✗</span>${c.label}</li>`;
+    return           `<li class="criteria-item crit-optional"><span class="crit-icon">◦</span>${c.label} <em style="opacity:0.7">(optional)</em></li>`;
+  }).join('');
+
+  const statusBadge = showStatus
+    ? `<span class="status-badge ${badgeMap[r.status]}">${statusMap[r.status]}</span>` : '';
+
+  return `
+  <div class="scheme-card">
+    <div class="status-stripe ${showStatus ? stripeMap[r.status] : ''}"></div>
+    <div class="card-header">
+      <div class="scheme-icon-wrap cat-${s.category}">${s.icon}</div>
+      <div class="scheme-meta">
+        <div class="scheme-name">${s.name}</div>
+        <div class="scheme-fullname">${s.full_name}</div>
+        ${statusBadge}
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="scheme-desc">${s.description || ''}</p>
+      <div class="benefit-tag">🎁 ${s.benefit}</div>
+      ${criteriaHtml ? `<ul class="criteria-list">${criteriaHtml}</ul>` : ''}
+    </div>
+    <div class="card-footer">
+      <span class="cat-tag">📂 ${s.category}</span>
+      <button class="btn-details" onclick="openDetail('${s.id}')">View details & apply →</button>
+    </div>
+  </div>`;
+}
+
+function emptyState() {
+  return `<div class="empty-state">
+    <div class="empty-icon">○</div>
+    <h3>No schemes match this filter</h3>
+    <p>Try adjusting the status or category filter.</p>
+  </div>`;
+}
+
+/* ─── All Schemes Page ──────────────────────────── */
+async function loadAllSchemes(cat, btn) {
+  document.querySelectorAll('#page-schemes .cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  setLoading(true, 'Loading schemes…');
+  try {
+    const url = cat === 'all' ? '/api/schemes' : `/api/schemes?category=${cat}`;
+    const res  = await fetch(API + url);
+    const list = await res.json();
+    document.getElementById('all-schemes-list').innerHTML = list.map(s => {
+      return schemeCard({ scheme: s, criteria: [], status: null }, false);
+    }).join('');
+  } catch(e) {
+    document.getElementById('all-schemes-list').innerHTML =
+      `<div class="empty-state"><div class="empty-icon">⚠</div><p>Could not load schemes. Is the Flask backend running?</p></div>`;
+  } finally {
+    setLoading(false);
+  }
+}
+
+/* ─── Detail Modal ──────────────────────────────── */
+async function openDetail(id) {
+  setLoading(true, 'Loading scheme details…');
+  try {
+    const res  = await fetch(API + `/api/schemes/${id}`);
+    const s    = await res.json();
+    document.getElementById('modal-name').textContent    = s.full_name;
+    document.getElementById('modal-ministry').textContent = s.ministry;
+    document.getElementById('modal-body').innerHTML = `
+      <div class="modal-sec">
+        <div class="modal-sec-title">About this scheme</div>
+        <p class="modal-desc">${s.description}</p>
+      </div>
+      <div class="modal-sec">
+        <div class="modal-sec-title">Key benefit</div>
+        <div class="modal-benefit">🎁 ${s.benefit}</div>
+      </div>
+      <div class="modal-sec">
+        <div class="modal-sec-title">Documents required</div>
+        <ul class="doc-list">
+          ${s.documents.map(d => `<li><span class="doc-icon">📄</span>${d}</li>`).join('')}
+        </ul>
+      </div>
+      <div class="modal-sec">
+        <div class="modal-sec-title">How to apply</div>
+        <ul class="step-list">
+          ${s.apply_steps.map((step, i) => `
+            <li class="step-item">
+              <span class="step-num">${i+1}</span>
+              <span>${step}</span>
+            </li>`).join('')}
+        </ul>
+      </div>
+      <div class="modal-sec">
+        <div class="modal-sec-title">Official portal</div>
+        <a class="modal-link" href="${s.link}" target="_blank" rel="noopener">
+          Visit official website →
+        </a>
+      </div>`;
+    document.getElementById('modal-bg').classList.add('open');
+  } catch(e) {
+    toast('Could not load scheme details.');
+  } finally {
+    setLoading(false);
+  }
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modal-bg') || e.currentTarget.classList.contains('modal-close')) {
+    document.getElementById('modal-bg').classList.remove('open');
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('modal-bg').classList.remove('open');
+});
+
+/* ─── Stats Page ────────────────────────────────── */
+async function loadStats() {
+  setLoading(true, 'Loading analytics…');
+  try {
+    const res  = await fetch(API + '/api/stats');
+    const data = await res.json();
+    document.getElementById('st-checks').textContent = data.total_checks.toLocaleString();
+
+    const eligBody = document.querySelector('#tbl-eligible tbody');
+    eligBody.innerHTML = data.top_eligible.map(r =>
+      `<tr><td>${r.name}</td><td><span class="cat-badge">${r.category}</span></td><td class="num">${r.c}</td></tr>`
+    ).join('') || '<tr><td colspan="3" style="color:var(--ink3);font-size:0.85rem">No checks yet</td></tr>';
+
+    const srchBody = document.querySelector('#tbl-searched tbody');
+    srchBody.innerHTML = data.most_searched.map(r =>
+      `<tr><td>${r.name}</td><td class="num">${r.c}</td></tr>`
+    ).join('') || '<tr><td colspan="2" style="color:var(--ink3);font-size:0.85rem">No checks yet</td></tr>';
+  } catch(e) {
+    toast('Could not load analytics.');
+  } finally {
+    setLoading(false);
+  }
+}
+</script>
+</body>
+</html>
