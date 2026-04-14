@@ -61,7 +61,7 @@ def options(_p):
 
 @app.route("/")
 def index():
-    return send_from_directory(STATIC, "index.html")
+    return app.send_static_file("index.html")
 
 @app.route("/<path:filename>")
 def static_files(filename):
